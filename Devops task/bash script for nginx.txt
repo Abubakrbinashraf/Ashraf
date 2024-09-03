@@ -1,0 +1,41 @@
+#!/bin/bash
+# Configuration
+NAMESPACE="Custom/NGINX"
+METRIC_NAME="NginxStatus"
+REGION="us-east-1"  # Change this to your preferred AWS region
+# AWS CLI command for sending metrics
+AWS_CLI_CMD="aws cloudwatch put-metric-data --namespace $NAMESPACE --metric-name $METRIC_NAME --region $REGION"
+# Check if NGINX is running
+if pgrep nginx > /dev/null; then
+    STATUS=1
+else
+    STATUS=0
+fi
+# Send the metric to CloudWatch
+$AWS_CLI_CMD --value $STATUS --unit Count
+# Logging for debugging
+echo "NginxStatus: $STATUS" >> /var/log/nginx_monitor.log
+
+
+
+
+#!/bin/bash
+# Configuration
+NAMESPACE="httpd"
+METRIC_NAME="httpdStatus"
+REGION="us-east-1"  # Change this to your preferred AWS region
+# AWS CLI command for sending metrics
+AWS_CLI_CMD="aws cloudwatch put-metric-data --namespace $NAMESPACE --metric-name $METRIC_NAME --region $REGION"
+# Check if httpd is running
+if pgrep httpd > /dev/null; then
+    STATUS=1
+else
+    STATUS=0
+fi
+# Send the metric to CloudWatch
+$AWS_CLI_CMD --value $STATUS --unit Count
+# Logging for debugging
+echo "httpdStatus: $STATUS" >> /var/log/httpd_monitor.log
+
+
+
